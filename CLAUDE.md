@@ -1,7 +1,22 @@
 # CLAUDE.md — claude-dev-bot
 
 This file provides Claude and Claude Code with full context about this project.
-Update this file whenever a significant architectural or structural change is made.
+
+## Important — Keep This File Up to Date
+
+This file must always reflect the current state of the project.
+After every implementation, update the relevant sections and check off the Current Status checklist at the bottom.
+
+**Update this file when:**
+- A new feature or file is implemented
+- A dependency is added or removed
+- A design decision changes
+- Something moves out of or into scope
+- The project structure changes
+
+**Never let this file fall behind the actual code.**
+If CLAUDE.md says something is not implemented but it is — fix CLAUDE.md immediately.
+Claude Code relies on this file to understand what exists and what doesn't.
 
 ---
 
@@ -145,6 +160,49 @@ GitHub                   — PR opened/updated/merged
 src/github/webhook.js    — receives the webhook event
     ↓
 src/bot/events.js        — formats and posts notification to Slack channel
+```
+
+---
+
+## What to Fetch from GitHub
+
+`src/github/client.js` is responsible for all GitHub data fetching.
+Every PR review requires two separate fetches:
+
+### Fetch 1 — PR Data
+Fetch from the PR itself via Octokit:
+- PR title, author, base branch, head branch, URL
+- Raw unified diff (all code changes)
+
+### Fetch 2 — Target Repo Docs
+Fetch these files from the target repo's `.claude/docs/` folder:
+
+| File | Priority | Notes |
+|---|---|---|
+| `.claude/docs/coding-standards.md` | Always fetch | Most important — used to flag violations |
+| `.claude/docs/project-overview.md` | Always fetch | Gives Claude app purpose and logic |
+| `.claude/docs/project-structure.md` | Always fetch | Tells Claude where things live |
+| `.claude/docs/todo.md` | Fetch if exists | Skip silently if missing |
+
+**Rules:**
+- If a doc file is missing — skip it silently, never crash
+- If ALL docs are missing — do a best-effort review based on general best practices and note in Slack that no project docs were found
+- Never fetch raw source code files — docs are always sufficient
+- Never fetch `current-feature.md` — it is local only and never on remote
+- Cap PR diffs at 500 lines — if larger, prioritize files with most changes
+
+### What `fetchPRData(prNumber)` Must Return
+```js
+{
+  metadata: { title, author, baseBranch, headBranch, url },
+  diff,       // raw unified diff string
+  docs: {
+    codingStandards,   // string or null
+    projectOverview,   // string or null
+    projectStructure,  // string or null
+    todo,              // string or null
+  }
+}
 ```
 
 ---
