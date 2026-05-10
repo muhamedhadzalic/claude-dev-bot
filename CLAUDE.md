@@ -245,6 +245,6 @@ The project was built in this sequence — follow this order when making changes
 
 - [x] Project scaffolded
 - [x] Slack bot responding to mentions
-- [ ] GitHub webhook receiving PR events
+- [x] GitHub webhook receiving PR events
 - [ ] Claude API integrated
 - [ ] Deployed to Railway
