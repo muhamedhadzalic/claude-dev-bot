@@ -89,6 +89,10 @@ ANTHROPIC_API_KEY=sk-ant-...
 # GitHub
 GITHUB_TOKEN=ghp_...
 GITHUB_REPO=owner/repo-name     # e.g. amar/my-app
+GITHUB_WEBHOOK_SECRET=...       # Secret used to verify incoming webhook signatures
+
+# Slack channel where PR notifications are posted
+SLACK_CHANNEL_ID=C0123456789
 
 # App
 PORT=3000
@@ -246,5 +250,5 @@ The project was built in this sequence — follow this order when making changes
 - [x] Project scaffolded
 - [x] Slack bot responding to mentions
 - [x] GitHub webhook receiving PR events
-- [ ] Claude API integrated
+- [x] Claude API integrated
 - [ ] Deployed to Railway
